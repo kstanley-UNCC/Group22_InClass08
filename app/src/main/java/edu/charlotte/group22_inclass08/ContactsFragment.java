@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 import edu.charlotte.group22_inclass08.databinding.FragmentContactsBinding;
@@ -56,7 +58,10 @@ public class ContactsFragment extends Fragment {
                     return;
                 }
 
-                String data = response.body().string();
+                Gson gson = new Gson();
+                Contacts contacts = gson.fromJson(response.body().string(), Contacts.class);
+
+                Log.d("demo", "onResponse: " + contacts);
             }
         });
     }
