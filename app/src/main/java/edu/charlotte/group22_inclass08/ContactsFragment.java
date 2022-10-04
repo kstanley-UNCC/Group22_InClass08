@@ -49,6 +49,7 @@ public class ContactsFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Toast.makeText(requireActivity(), "Unable to retrieve contacts from the Internet", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
 
