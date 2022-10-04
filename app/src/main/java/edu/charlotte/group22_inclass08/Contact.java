@@ -9,14 +9,13 @@ import com.google.gson.annotations.SerializedName;
 public class Contact {
     @SerializedName("Cid")
     Integer id;
-
     @SerializedName("Name")
     String name;
     @SerializedName("Email")
     String email;
     @SerializedName("Phone")
     String phone;
-    @SerializedName("PhoneTYpe")
+    @SerializedName("PhoneType")
     String phoneType;
 
     @Override
