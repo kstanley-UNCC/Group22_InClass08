@@ -4,6 +4,8 @@
 
 package edu.charlotte.group22_inclass08;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 public class Contact {
@@ -18,6 +20,7 @@ public class Contact {
     @SerializedName("PhoneType")
     String phoneType;
 
+    @NonNull
     @Override
     public String toString() {
         return "Contact{" +
