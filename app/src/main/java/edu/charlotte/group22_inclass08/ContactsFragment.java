@@ -27,8 +27,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class ContactsFragment extends Fragment {
+    private final OkHttpClient client = new OkHttpClient();
+
     FragmentContactsBinding binding;
-    OkHttpClient client = new OkHttpClient();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
