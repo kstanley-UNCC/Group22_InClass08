@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +31,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ContactsFragment extends Fragment {
+public class ContactsFragment extends Fragment implements DetailsFragment.iListener {
     private final OkHttpClient client = new OkHttpClient();
 
     FragmentContactsBinding binding;
+    Contacts contacts;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -53,27 +55,46 @@ public class ContactsFragment extends Fragment {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(requireActivity(), "Unable to retrieve contacts from the Internet", Toast.LENGTH_LONG).show();
+                requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "Unable to retrieve contacts from the Internet", Toast.LENGTH_LONG).show());
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Unable to retrieve contacts from the Internet", Toast.LENGTH_LONG).show();
+                    requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "Unable to retrieve contacts from the Internet", Toast.LENGTH_LONG).show());
                     return;
                 }
 
                 Gson gson = new Gson();
-                Contacts contacts = gson.fromJson(Objects.requireNonNull(response.body()).string(), Contacts.class);
+                contacts = gson.fromJson(Objects.requireNonNull(response.body()).string(), Contacts.class);
 
-                requireActivity().runOnUiThread(() -> binding.contactsList.setAdapter(new ContactsAdapter(
-                        requireActivity(),
-                        R.layout.fragment_contact_list_row,
-                        contacts.contacts
-                )));
+                requireActivity().runOnUiThread(() -> {
+                    binding.contactsList.setAdapter(new ContactsAdapter(
+                            requireActivity(),
+                            R.layout.fragment_contact_list_row,
+                            contacts.contacts
+                    ));
+
+                    binding.contactsList.setOnItemClickListener((parent, v, position, id) -> {
+                        getParentFragmentManager().beginTransaction()
+                                .replace(R.id.containerView, new DetailsFragment(ContactsFragment.this, contacts.contacts.get(position)))
+                                .addToBackStack(null)
+                                .commit();
+                    });
+                });
             }
         });
+    }
+
+    @Override
+    public void deleteContact(int id) {
+        for (Contact contact: contacts.contacts) {
+            if (contact.id == id) {
+                contacts.contacts.remove(contact);
+                break;
+            }
+        }
     }
 
     static public class ContactsAdapter extends ArrayAdapter<Contact> {
