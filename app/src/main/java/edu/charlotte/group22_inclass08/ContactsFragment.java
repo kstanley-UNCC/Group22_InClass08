@@ -31,7 +31,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class ContactsFragment extends Fragment implements DetailsFragment.iListener {
+public class ContactsFragment extends Fragment implements DetailsFragment.iListener, AddFragment.iListener {
     private final OkHttpClient client = new OkHttpClient();
 
     FragmentContactsBinding binding;
@@ -47,6 +47,12 @@ public class ContactsFragment extends Fragment implements DetailsFragment.iListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void addContact(Contact contact) {
+        contactsResponse.contacts.add(contact);
+    }
 
         Request request = new Request.Builder()
                 .url("https://www.theappsdr.com/contacts/json")
