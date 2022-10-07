@@ -35,7 +35,7 @@ public class ContactsFragment extends Fragment implements DetailsFragment.iListe
     private final OkHttpClient client = new OkHttpClient();
 
     FragmentContactsBinding binding;
-    Contacts contacts;
+    ContactsResponse contactsResponse;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -67,21 +67,24 @@ public class ContactsFragment extends Fragment implements DetailsFragment.iListe
                 }
 
                 Gson gson = new Gson();
-                contacts = gson.fromJson(Objects.requireNonNull(response.body()).string(), Contacts.class);
+                contactsResponse = gson.fromJson(Objects.requireNonNull(response.body()).string(), ContactsResponse.class);
 
                 requireActivity().runOnUiThread(() -> {
                     binding.contactsList.setAdapter(new ContactsAdapter(
                             requireActivity(),
                             R.layout.fragment_contact_list_row,
-                            contacts.contacts
+                            contactsResponse.contacts
                     ));
 
-                    binding.contactsList.setOnItemClickListener((parent, v, position, id) -> {
-                        getParentFragmentManager().beginTransaction()
-                                .replace(R.id.containerView, new DetailsFragment(ContactsFragment.this, contacts.contacts.get(position)))
-                                .addToBackStack(null)
-                                .commit();
-                    });
+                    binding.contactsList.setOnItemClickListener((parent, v, position, id) -> getParentFragmentManager().beginTransaction()
+                            .replace(R.id.containerView, new DetailsFragment(ContactsFragment.this, contactsResponse.contacts.get(position)))
+                            .addToBackStack(null)
+                            .commit());
+
+                    binding.addContactButton.setOnClickListener(v -> getParentFragmentManager().beginTransaction()
+                            .replace(R.id.containerView, new AddFragment(ContactsFragment.this))
+                            .addToBackStack(null)
+                            .commit());
                 });
             }
         });
