@@ -45,4 +45,21 @@
         app:layout_constraintStart_toEndOf="@+id/contactPhone"
         app:layout_constraintTop_toTopOf="@+id/contactPhone" />
 
+    <ImageButton
+        android:id="@+id/deleteButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/contactPhone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
+
+    <ImageButton
+        android:id="@+id/detailsButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/deleteButton"
+        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
+        app:srcCompat="@android:drawable/ic_menu_info_details" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
