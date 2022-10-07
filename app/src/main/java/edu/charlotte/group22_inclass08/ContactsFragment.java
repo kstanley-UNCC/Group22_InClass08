@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,13 +46,27 @@ public class ContactsFragment extends Fragment implements DetailsFragment.iListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        refreshContacts();
     }
 
     @Override
     public void addContact(Contact contact) {
         contactsResponse.contacts.add(contact);
+        refreshContacts();
     }
 
+    @Override
+    public void deleteContact(int id) {
+        for (Contact contact: contactsResponse.contacts) {
+            if (contact.id == id) {
+                contactsResponse.contacts.remove(contact);
+                refreshContacts();
+                break;
+            }
+        }
+    }
+
+    private void refreshContacts() {
         Request request = new Request.Builder()
                 .url("https://www.theappsdr.com/contacts/json")
                 .build();
@@ -94,16 +107,6 @@ public class ContactsFragment extends Fragment implements DetailsFragment.iListe
                 });
             }
         });
-    }
-
-    @Override
-    public void deleteContact(int id) {
-        for (Contact contact: contacts.contacts) {
-            if (contact.id == id) {
-                contacts.contacts.remove(contact);
-                break;
-            }
-        }
     }
 
     static public class ContactsAdapter extends ArrayAdapter<Contact> {
